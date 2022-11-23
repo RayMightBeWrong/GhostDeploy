@@ -1,0 +1,21 @@
+---
+
+- name: Delete Ghost service
+  ansible.builtin.command:
+    argv: ["kubectl", "delete", "svc", "ghost-service"]
+
+- name: Delete MySQL service
+  ansible.builtin.command:
+    argv: ["kubectl", "delete", "svc", "mysql-service"]
+
+- name: Delete Ghost deployment
+  ansible.builtin.command:
+    argv: ["kubectl", "delete", "deployment", "ghost-deployment"]
+
+- name: Delete MySQL deployment
+  ansible.builtin.command:
+    argv: ["kubectl", "delete", "deployment", "mysql-deployment"]
+
+- name: Delete persistent volume claim
+  ansible.builtin.command:
+    argv: ["kubectl", "delete", "pvc", "mysql-pv-claim"]
