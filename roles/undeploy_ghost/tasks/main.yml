@@ -1,5 +1,9 @@
 ---
 
+- name: Delete Load Balancer
+  ansible.builtin.command:
+    argv: ["kubectl", "delete", "svc", "ghost-lb-service"]
+
 - name: Delete Ghost service
   ansible.builtin.command:
     argv: ["kubectl", "delete", "svc", "ghost-service"]
