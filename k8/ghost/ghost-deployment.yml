@@ -11,8 +11,7 @@ spec:
   selector:
     matchLabels:
       app: ghost
-  strategy:
-    type: Recreate
+  replicas: 1
   template:
     metadata:
       labels:
@@ -23,10 +22,8 @@ spec:
       - name: ghost
         image: ghost:5.14.1
         env: # The variables below could be set on a ConfigMap object
-        - name: NODE_ENV
-          value: development
         - name: url
-          value: http://localhost:8000
+          value: http://localhost
         - name: database__client
           value: mysql
         - name: database__connection__host
@@ -39,3 +36,10 @@ spec:
           value: ghost
         ports:
         - containerPort: 8000
+        volumeMounts:
+        - name: ghost-persistent-storage
+          mountPath: /var/lib/ghost/content
+      volumes:
+      - name: ghost-persistent-storage
+        persistentVolumeClaim:
+          claimName: ghost-pv-claim

@@ -16,6 +16,10 @@
   ansible.builtin.command:
     argv: ["kubectl", "delete", "deployment", "mysql-deployment"]
 
-- name: Delete persistent volume claim
+- name: Delete Ghost persistent volume claim
+  ansible.builtin.command:
+    argv: ["kubectl", "delete", "pvc", "ghost-pv-claim"]
+
+- name: Delete MySQL persistent volume claim
   ansible.builtin.command:
     argv: ["kubectl", "delete", "pvc", "mysql-pv-claim"]

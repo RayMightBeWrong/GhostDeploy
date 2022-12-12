@@ -12,6 +12,10 @@
   ansible.builtin.command:
     argv: ["kubectl", "apply", "-f", "~/k8/mysql/mysql-service.yml"]
 
+- name: Ghost persistent volume claim
+  ansible.builtin.command:
+    argv: ["kubectl", "apply", "-f", "~/k8/ghost/ghost-pvc.yml"]
+
 - name: Ghost kubernetes deployment
   ansible.builtin.command:
     argv: ["kubectl", "apply", "-f", "~/k8/ghost/ghost-deployment.yml"]
@@ -19,3 +23,7 @@
 - name: Ghost kubernetes service
   ansible.builtin.command:
     argv: ["kubectl", "apply", "-f", "~/k8/ghost/ghost-service.yml"]
+    
+- name: Load balancer service
+  ansible.builtin.command:
+    argv: ["kubectl", "expose", "deployment", "ghost-deployment", "--type=LoadBalancer", "--name=ghost-lb-service"]
