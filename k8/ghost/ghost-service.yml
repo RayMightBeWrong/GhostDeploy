@@ -8,10 +8,9 @@ metadata:
     app: ghost
     tier: application
 spec:
-  type: NodePort
+  type: ClusterIP
   selector:
     app: ghost
   ports:
-    - targetPort: 8000 # port that containers are listening on
-      port: 8000 # port number exposed internally in the cluster
-      nodePort: 30007
+    - targetPort: 8080 # port that containers are listening on
+      port: 8080 # port number exposed internally in the cluster
