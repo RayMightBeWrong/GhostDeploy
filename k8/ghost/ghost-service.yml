@@ -1,16 +1,18 @@
 ---
 # Service for exposing Ghost
+
 apiVersion: v1
 kind: Service
 metadata:
   name: ghost-service # logical name of the service, which will also become the DNS name of the service when it is created.
+  namespace: default
   labels:
     app: ghost
-    tier: application
 spec:
-  type: ClusterIP
+  type: LoadBalancer
   selector:
     app: ghost
   ports:
-    - targetPort: 8080 # port that containers are listening on
-      port: 8080 # port number exposed internally in the cluster
+  - protocol: TCP
+    port: 80
+    targetPort: 2368

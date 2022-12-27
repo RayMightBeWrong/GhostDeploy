@@ -4,26 +4,25 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ghost-deployment
+  namespace: default
   labels:
     app: ghost
-    tier: application
 spec:
+  replicas: 1
   selector:
     matchLabels:
       app: ghost
-  replicas: 1
   template:
     metadata:
       labels:
         app: ghost
-        tier: application
     spec:
       containers:
       - name: ghost
-        image: ghost:latest
+        image: ghost:5.14.1
         env: # The variables below could be set on a ConfigMap object
-        - name: url
-          value: http://localhost:8080
+        #- name: url
+        #  value: http://10.128.0.24:8080
         - name: database__client
           value: mysql
         - name: database__connection__host
@@ -31,15 +30,8 @@ spec:
         - name: database__connection__user
           value: ghostuser
         - name: database__connection__password
-          value: "123456"
+          value: bruhlmao
         - name: database__connection__database
           value: ghost
         ports:
-        - containerPort: 8080
-        volumeMounts:
-        - name: ghost-persistent-storage
-          mountPath: /var/lib/ghost/content
-      volumes:
-      - name: ghost-persistent-storage
-        persistentVolumeClaim:
-          claimName: ghost-pv-claim
+        - containerPort: 2368

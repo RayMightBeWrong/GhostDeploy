@@ -4,6 +4,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: mysql-deployment
+  namespace: default
   labels:
     app: mysql
     tier: database
@@ -28,9 +29,9 @@ spec:
         - name: MYSQL_DATABASE
           value: ghost
         - name: MYSQL_USER
-          value: ghostuser
+          value: "ghostuser"
         - name: MYSQL_PASSWORD
-          value: "123456" # Use Secret object in real usage
+          value: "bruhlmao" # Use Secret object in real usage
         ports:
         - containerPort: 3306
         volumeMounts:

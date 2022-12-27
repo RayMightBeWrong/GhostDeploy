@@ -8,7 +8,7 @@
       machine_type: "{{ gcp_machine_type }}"
       disk_size_gb: "{{ gcp_disk_size_gb }}"
       image_type: "{{ gcp_image_type }}"
-    location:  "{{ gcp_zone }}"
+    location: "{{ gcp_zone }}"
     project: "{{ gcp_project }}"
     auth_kind: "{{ gcp_auth_kind }}"
     service_account_file: "{{ gcp_cred_file }}"
@@ -16,7 +16,8 @@
   register: cluster
   until: "cluster is not failed"
   delay: 60
-  retries: 3
+  retries: 1
+
 
 - name: Verify that the cluster was created
   shell: gcloud container clusters describe  --project="{{ gcp_project}}"  --zone="{{ gcp_zone }}"  ascn-cluster

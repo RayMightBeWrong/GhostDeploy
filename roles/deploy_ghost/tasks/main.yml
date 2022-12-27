@@ -1,29 +1,26 @@
 ---
 
 - name: MySQL persistent volume claim
-  ansible.builtin.command:
-    argv: ["kubectl", "apply", "-f", "~/k8/mysql/mysql-pvc.yml"]
+  kubernetes.core.k8s:
+    state: present
+    src: k8/mysql/mysql-pvc.yml
 
 - name: MySQL kubernetes deployment
-  ansible.builtin.command:
-    argv: ["kubectl", "apply", "-f", "~/k8/mysql/mysql-deployment.yml"]
+  kubernetes.core.k8s:
+    state: present
+    src: k8/mysql/mysql-deployment.yml
 
 - name: MySQL kubernetes service
-  ansible.builtin.command:
-    argv: ["kubectl", "apply", "-f", "~/k8/mysql/mysql-service.yml"]
-
-- name: Ghost persistent volume claim
-  ansible.builtin.command:
-    argv: ["kubectl", "apply", "-f", "~/k8/ghost/ghost-pvc.yml"]
+  kubernetes.core.k8s:
+    state: present
+    src: k8/mysql/mysql-service.yml
 
 - name: Ghost kubernetes deployment
-  ansible.builtin.command:
-    argv: ["kubectl", "apply", "-f", "~/k8/ghost/ghost-deployment.yml"]
+  kubernetes.core.k8s:
+    state: present
+    src: k8/ghost/ghost-deployment.yml
 
 - name: Ghost kubernetes service
-  ansible.builtin.command:
-    argv: ["kubectl", "apply", "-f", "~/k8/ghost/ghost-service.yml"]
-    
-- name: Load balancer service
-  ansible.builtin.command:
-    argv: ["kubectl", "expose", "deployment", "ghost-deployment", "--type=LoadBalancer", "--name=ghost-lb-service"]
+  k8s:
+    state: present
+    src: k8/ghost/ghost-service.yml
