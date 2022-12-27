@@ -1,29 +1,26 @@
 ---
 
-#- name: Delete Load Balancer
-#  ansible.builtin.command:
-#    argv: ["kubectl", "delete", "svc", "ghost-lb-service"]
+- name: MySQL persistent volume claim
+  kubernetes.core.k8s:
+    state: absent
+    src: k8/mysql/mysql-pvc.yml
 
-#- name: Delete Ghost service
-#  ansible.builtin.command:
-#    argv: ["kubectl", "delete", "svc", "ghost-service"]
+- name: MySQL kubernetes deployment
+  kubernetes.core.k8s:
+    state: absent
+    src: k8/mysql/mysql-deployment.yml
 
-- name: Delete MySQL service
-  ansible.builtin.command:
-    argv: ["kubectl", "delete", "svc", "mysql-service"]
+- name: MySQL kubernetes service
+  kubernetes.core.k8s:
+    state: absent
+    src: k8/mysql/mysql-service.yml
 
-- name: Delete Ghost deployment
-  ansible.builtin.command:
-    argv: ["kubectl", "delete", "deployment", "ghost-deployment"]
+- name: Ghost kubernetes deployment
+  kubernetes.core.k8s:
+    state: absent
+    src: k8/ghost/ghost-deployment.yml
 
-- name: Delete MySQL deployment
-  ansible.builtin.command:
-    argv: ["kubectl", "delete", "deployment", "mysql-deployment"]
-
-- name: Delete Ghost persistent volume claim
-  ansible.builtin.command:
-    argv: ["kubectl", "delete", "pvc", "ghost-pv-claim"]
-
-- name: Delete MySQL persistent volume claim
-  ansible.builtin.command:
-    argv: ["kubectl", "delete", "pvc", "mysql-pv-claim"]
+- name: Ghost kubernetes service
+  k8s:
+    state: absent
+    src: k8/ghost/ghost-service.yml
