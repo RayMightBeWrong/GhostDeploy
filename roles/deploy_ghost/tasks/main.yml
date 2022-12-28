@@ -3,24 +3,80 @@
 - name: MySQL persistent volume claim
   kubernetes.core.k8s:
     state: present
-    src: k8/mysql/mysql-pvc.yml
+    src: "{{ mysql_pvc }}"
 
 - name: MySQL kubernetes deployment
   kubernetes.core.k8s:
     state: present
-    src: k8/mysql/mysql-deployment.yml
+    src: "{{ mysql_deploy }}"
 
 - name: MySQL kubernetes service
   kubernetes.core.k8s:
     state: present
-    src: k8/mysql/mysql-service.yml
+    src: "{{ mysql_service }}"
+
+- name: Getting name of MySQL pod
+  kubernetes.core.k8s_info:
+    kind: Pod 
+    namespace: default
+    label_selectors: 
+      - app = mysql
+  register: mysql_deployment
+
+- name: Wait for MySQL pod to be ready
+  kubernetes.core.k8s_info:
+    api_version: v1
+    kind: Pod
+    name: "{{ mysql_deployment.resources.0.metadata.name }}"
+    namespace: default
+    wait: true
+    wait_condition: 
+      type: Ready
+    wait_timeout: 200
 
 - name: Ghost kubernetes deployment
   kubernetes.core.k8s:
     state: present
-    src: k8/ghost/ghost-deployment.yml
+    src: "{{ ghost_deploy }}"
+
+- name: Getting name of Ghost pod
+  kubernetes.core.k8s_info:
+    kind: Pod 
+    namespace: default
+    label_selectors: 
+      - app = ghost
+  register: ghost_deployment
+
+- name: Wait for Ghost pod to be ready
+  kubernetes.core.k8s_info:
+    api_version: v1
+    kind: Pod
+    name: "{{ ghost_deployment.resources.0.metadata.name }}"
+    namespace: default
+    wait: true
+    wait_condition: 
+      type: Ready
+    wait_timeout: 200
 
 - name: Ghost kubernetes service
-  k8s:
+  kubernetes.core.k8s:
     state: present
-    src: k8/ghost/ghost-service.yml
+    src: "{{ ghost_service }}"
+
+- name: Wait for Ghost service to be ready 
+  kubernetes.core.k8s_info:
+    api_version: v1
+    kind: Service
+    name: ghost-service
+    namespace: default
+  register: ghost_service
+  until: "ghost_service.resources[0].status.loadBalancer.ingress is defined"
+  delay: 30
+  retries: 3
+
+- name: Create admin in Ghost DB
+  kubernetes.core.k8s_exec:
+    namespace: default
+    pod: "{{ mysql_deployment.resources.0.metadata.name }}"
+    command: mysql ghost -e "UPDATE users SET name='ascn', password='ascn123', email='ascn@example.com', status='active' WHERE id=1;" 
+

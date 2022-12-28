@@ -1,6 +1,7 @@
 ---
 
 - name: MySQL persistent volume claim
+  when: "delete_data is defined and delete_data == 'true'"
   kubernetes.core.k8s:
     state: absent
     src: k8/mysql/mysql-pvc.yml
@@ -22,5 +23,5 @@
 
 - name: Ghost kubernetes service
   k8s:
-    state: absent
+    state: absent 
     src: k8/ghost/ghost-service.yml

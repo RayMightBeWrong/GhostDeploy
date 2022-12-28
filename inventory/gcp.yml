@@ -16,8 +16,16 @@ all:
 
   # APP variables
   ghost_ip: <GHOST_SERVICE_IP>     # Needs to be updated
-  ghost_port: <GHOST_PORT>         # Needs to be updated
+  ghost_port: 30007         # Needs to be updated
+
+
+  # k8s files
+  mysql_pvc: k8/mysql/mysql-pvc.yml
+  mysql_deploy: k8/mysql/mysql-deployment.yml
+  mysql_service: k8/mysql/mysql-service.yml
+  ghost_deploy: k8/ghost/ghost-deployment.yml
+  ghost_service: k8/ghost/ghost-service.yml
 
 
   # Additional variables
-  # ...
+  db_password: "654321"
