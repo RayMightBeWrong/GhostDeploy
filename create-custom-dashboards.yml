@@ -1,0 +1,5 @@
+- name: Create custom dashboards
+  hosts: localhost
+  gather_facts: false
+  roles: 
+    - dashboards
