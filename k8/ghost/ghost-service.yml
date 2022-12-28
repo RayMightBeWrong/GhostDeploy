@@ -9,7 +9,7 @@ metadata:
   labels:
     app: ghost
 spec:
-  type: LoadBalancer
+  type: LoadBalancer 
   selector:
     app: ghost
   ports:

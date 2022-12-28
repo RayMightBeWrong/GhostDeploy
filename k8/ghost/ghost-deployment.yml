@@ -21,8 +21,8 @@ spec:
       - name: ghost
         image: ghost:5.14.1
         env: # The variables below could be set on a ConfigMap object
-        #- name: url
-        #  value: http://{{ ghost_ip }}:{{ ghost_port }}
+        - name: url
+          value: http://104.197.175.181:30007/
         - name: database__client
           value: mysql
         - name: database__connection__host
@@ -33,5 +33,15 @@ spec:
           value: bruhlmao
         - name: database__connection__database
           value: ghost
+        #- name: mail__transport
+        #  value: SMTP
+        #- name: mail__options__secure
+        #  value: "false"
+        #- name: mail__options__service
+        #  value: "Mailgun"
+        #- name: mail__options__auth__user
+        #  value: "postmaster@example.mailgun.org" 
+        #- name: mail__options__auth__pass
+        #  value: "1234567890"
         ports:
         - containerPort: 2368

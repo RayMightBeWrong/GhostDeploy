@@ -34,6 +34,38 @@
       type: Ready
     wait_timeout: 200
 
+- name: Ghost kubernetes service
+  kubernetes.core.k8s:
+    state: present
+    src: "{{ ghost_service_file}}"
+
+- name: Wait for Ghost service to be ready 
+  kubernetes.core.k8s_info:
+    api_version: v1
+    kind: Service
+    name: ghost-service
+    namespace: default
+  register: ghost_service
+  until: "ghost_service.resources.0.status.loadBalancer.ingress.0.ip is defined"
+  delay: 15
+  retries: 5
+
+- name: Test Inline
+  lineinfile:
+    path: inventory/gcp.yml
+    regexp: '^\s*ghost_ip:'
+    line: "  ghost_ip: {{ ghost_service.resources.0.status.loadBalancer.ingress.0.ip }}"
+    state: present
+    backrefs: yes
+
+- name: Test Inline Ghost Deployment
+  lineinfile:
+    path: "{{ ghost_deploy_file }}"
+    regexp: '^(\s*)value:(\s*)http'
+    line: '          value: http://{{ ghost_service.resources.0.status.loadBalancer.ingress.0.ip }}:{{ ghost_port }}/'
+    state: present
+    backrefs: yes
+
 - name: Ghost kubernetes deployment
   kubernetes.core.k8s:
     state: present
@@ -58,21 +90,9 @@
       type: Ready
     wait_timeout: 200
 
-- name: Ghost kubernetes service
-  kubernetes.core.k8s:
-    state: present
-    src: "{{ ghost_service_file}}"
-
-- name: Wait for Ghost service to be ready 
-  kubernetes.core.k8s_info:
-    api_version: v1
-    kind: Service
-    name: ghost-service
-    namespace: default
-  register: ghost_service
-  until: "ghost_service.resources[0].status.loadBalancer.ingress is defined"
-  delay: 30
-  retries: 3
+#- name: debug
+#  debug:
+#    msg: Node {{ nodes.resources.0.status.addresses.1.address }} | Service {{ ghost_service.resources.0.status.loadBalancer.ingress.0.ip }}
 
 - name: Create admin in Ghost DB
   kubernetes.core.k8s_exec:
