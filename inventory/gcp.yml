@@ -20,11 +20,11 @@ all:
 
 
   # k8s files
-  mysql_pvc: k8/mysql/mysql-pvc.yml
-  mysql_deploy: k8/mysql/mysql-deployment.yml
-  mysql_service: k8/mysql/mysql-service.yml
-  ghost_deploy: k8/ghost/ghost-deployment.yml
-  ghost_service: k8/ghost/ghost-service.yml
+  mysql_pvc_file: k8/mysql/mysql-pvc.yml
+  mysql_deploy_file: k8/mysql/mysql-deployment.yml
+  mysql_service_file: k8/mysql/mysql-service.yml
+  ghost_deploy_file: k8/ghost/ghost-deployment.yml
+  ghost_service_file: k8/ghost/ghost-service.yml
 
 
   # Additional variables

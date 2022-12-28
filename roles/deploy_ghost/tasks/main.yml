@@ -3,17 +3,17 @@
 - name: MySQL persistent volume claim
   kubernetes.core.k8s:
     state: present
-    src: "{{ mysql_pvc }}"
+    src: "{{ mysql_pvc_file }}"
 
 - name: MySQL kubernetes deployment
   kubernetes.core.k8s:
     state: present
-    src: "{{ mysql_deploy }}"
+    src: "{{ mysql_deploy_file }}"
 
 - name: MySQL kubernetes service
   kubernetes.core.k8s:
     state: present
-    src: "{{ mysql_service }}"
+    src: "{{ mysql_service_file }}"
 
 - name: Getting name of MySQL pod
   kubernetes.core.k8s_info:
@@ -37,7 +37,7 @@
 - name: Ghost kubernetes deployment
   kubernetes.core.k8s:
     state: present
-    src: "{{ ghost_deploy }}"
+    src: "{{ ghost_deploy_file }}"
 
 - name: Getting name of Ghost pod
   kubernetes.core.k8s_info:
@@ -61,7 +61,7 @@
 - name: Ghost kubernetes service
   kubernetes.core.k8s:
     state: present
-    src: "{{ ghost_service }}"
+    src: "{{ ghost_service_file}}"
 
 - name: Wait for Ghost service to be ready 
   kubernetes.core.k8s_info:
