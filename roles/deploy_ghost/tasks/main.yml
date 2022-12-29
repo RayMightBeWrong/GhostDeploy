@@ -69,7 +69,9 @@
 - name: Ghost kubernetes deployment
   kubernetes.core.k8s:
     state: present
-    src: "{{ ghost_deploy_file }}"
+    template:
+      path: "{{ ghost_deploy_file }}"
+    #src: "{{ ghost_deploy_file }}"
 
 - name: Getting name of Ghost pod
   kubernetes.core.k8s_info:
@@ -94,9 +96,12 @@
 #  debug:
 #    msg: Node {{ nodes.resources.0.status.addresses.1.address }} | Service {{ ghost_service.resources.0.status.loadBalancer.ingress.0.ip }}
 
+- name: Encrypt admin password
+  shell: "python3 -c 'import bcrypt; print(bcrypt.hashpw(b\"{{ ghost_admin_pw }}\", bcrypt.gensalt(rounds=10)).decode(\"ascii\"))'"
+  register:  ghost_admin_pw_encrypted
+
 - name: Create admin in Ghost DB
   kubernetes.core.k8s_exec:
     namespace: default
     pod: "{{ mysql_deployment.resources.0.metadata.name }}"
-    command: mysql ghost -e "UPDATE users SET name='ascn', password='ascn123', email='ascn@example.com', status='active' WHERE id=1;" 
-
+    command: mysql ghost -e "UPDATE users SET name='{{ ghost_admin_name }}', password='{{ ghost_admin_pw_encrypted.stdout }}', email='{{ ghost_admin_email }}', status='active' WHERE id=1;"
