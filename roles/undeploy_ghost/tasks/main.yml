@@ -16,12 +16,22 @@
     state: absent
     src: k8/mysql/mysql-service.yml
 
+- name: Ghost kubernetes service
+  k8s:
+    state: absent 
+    src: k8/ghost/ghost-service.yml
+
 - name: Ghost kubernetes deployment
   kubernetes.core.k8s:
     state: absent
     src: k8/ghost/ghost-deployment.yml
 
-- name: Ghost kubernetes service
-  k8s:
-    state: absent 
-    src: k8/ghost/ghost-service.yml
+- name: Wait for services to be undeployed
+  kubernetes.core.k8s_info:
+    api_version: v1
+    kind: Service
+    namespace: default
+  register: services
+  until: services.resources | length == 1  # only kubernetes service running
+  delay: 10
+  retries: 5
