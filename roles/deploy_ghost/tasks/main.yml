@@ -71,7 +71,6 @@
     state: present
     template:
       path: "{{ ghost_deploy_file }}"
-    #src: "{{ ghost_deploy_file }}"
 
 - name: Getting name of Ghost pod
   kubernetes.core.k8s_info:
@@ -91,10 +90,6 @@
     wait_condition: 
       type: Ready
     wait_timeout: 200
-
-#- name: debug
-#  debug:
-#    msg: Node {{ nodes.resources.0.status.addresses.1.address }} | Service {{ ghost_service.resources.0.status.loadBalancer.ingress.0.ip }}
 
 - name: Encrypt admin password
   shell: "python3 -c 'import bcrypt; print(bcrypt.hashpw(b\"{{ ghost_admin_pw }}\", bcrypt.gensalt(rounds=10)).decode(\"ascii\"))'"
