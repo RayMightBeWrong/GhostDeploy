@@ -1,0 +1,158 @@
+displayName: Services and VM Instances Dashboard
+mosaicLayout:
+  columns: 12
+  tiles:
+  - height: 4
+    widget:
+      title: Non-Evictable Memory Per Service
+      xyChart:
+        chartOptions:
+          mode: COLOR
+        dataSets:
+        - legendTemplate: Ghost
+          minAlignmentPeriod: 60s
+          plotType: LINE
+          targetAxis: Y1
+          timeSeriesQuery:
+            timeSeriesFilter:
+              aggregation:
+                alignmentPeriod: 60s
+                crossSeriesReducer: REDUCE_SUM
+                groupByFields:
+                - metadata.system_labels."service_name"
+                perSeriesAligner: ALIGN_MEAN
+              filter: metric.type="kubernetes.io/container/memory/used_bytes" resource.type="k8s_container"
+                resource.label."cluster_name"="ascn-cluster" metric.label."memory_type"="non-evictable"
+                metadata.system_labels."service_name"="ghost-service" resource.label."project_id"="{{ gcp_project }}"
+              secondaryAggregation:
+                alignmentPeriod: 60s
+        - legendTemplate: MySQL
+          minAlignmentPeriod: 60s
+          plotType: LINE
+          targetAxis: Y1
+          timeSeriesQuery:
+            timeSeriesFilter:
+              aggregation:
+                alignmentPeriod: 60s
+                crossSeriesReducer: REDUCE_SUM
+                groupByFields:
+                - metadata.system_labels."service_name"
+                perSeriesAligner: ALIGN_MEAN
+              filter: metric.type="kubernetes.io/container/memory/used_bytes" resource.type="k8s_container"
+                metric.label."memory_type"="non-evictable" resource.label."cluster_name"="ascn-cluster"
+                metadata.system_labels."service_name"="mysql-service" resource.label."project_id"="{{ gcp_project }}"
+              secondaryAggregation:
+                alignmentPeriod: 60s
+        timeshiftDuration: 0s
+        yAxis:
+          label: y1Axis
+          scale: LINEAR
+    width: 6
+    yPos: 4
+  - height: 4
+    widget:
+      title: CPU Utilization Per VM Instance
+      xyChart:
+        chartOptions:
+          mode: COLOR
+        dataSets:
+        - legendTemplate: VM instance ${metric.labels.instance_name}
+          minAlignmentPeriod: 60s
+          plotType: LINE
+          targetAxis: Y1
+          timeSeriesQuery:
+            timeSeriesFilter:
+              aggregation:
+                alignmentPeriod: 60s
+                crossSeriesReducer: REDUCE_MEAN
+                groupByFields:
+                - metric.label."instance_name"
+                perSeriesAligner: ALIGN_MEAN
+              filter: metric.type="compute.googleapis.com/instance/cpu/utilization"
+                resource.type="gce_instance" resource.label."project_id"="{{ gcp_project }}"
+              secondaryAggregation:
+                alignmentPeriod: 60s
+        timeshiftDuration: 0s
+        yAxis:
+          label: y1Axis
+          scale: LINEAR
+    width: 6
+    xPos: 6
+  - height: 4
+    widget:
+      title: CPU Usage Time Per Service
+      xyChart:
+        chartOptions:
+          mode: COLOR
+        dataSets:
+        - legendTemplate: Ghost service
+          minAlignmentPeriod: 60s
+          plotType: LINE
+          targetAxis: Y1
+          timeSeriesQuery:
+            timeSeriesFilter:
+              aggregation:
+                alignmentPeriod: 60s
+                crossSeriesReducer: REDUCE_MEAN
+                groupByFields:
+                - metadata.system_labels."service_name"
+                perSeriesAligner: ALIGN_RATE
+              filter: metric.type="kubernetes.io/container/cpu/core_usage_time" resource.type="k8s_container"
+                resource.label."cluster_name"="ascn-cluster" metadata.system_labels."service_name"="ghost-service"
+                resource.label."project_id"="{{ gcp_project }}"
+              secondaryAggregation:
+                alignmentPeriod: 60s
+        - legendTemplate: MySQL service
+          minAlignmentPeriod: 60s
+          plotType: LINE
+          targetAxis: Y1
+          timeSeriesQuery:
+            timeSeriesFilter:
+              aggregation:
+                alignmentPeriod: 60s
+                crossSeriesReducer: REDUCE_MEAN
+                groupByFields:
+                - metadata.system_labels."service_name"
+                perSeriesAligner: ALIGN_RATE
+              filter: metric.type="kubernetes.io/container/cpu/core_usage_time" resource.type="k8s_container"
+                resource.label."cluster_name"="ascn-cluster" metadata.system_labels."service_name"="mysql-service"
+                resource.label."project_id"="{{ gcp_project }}"
+              secondaryAggregation:
+                alignmentPeriod: 60s
+                perSeriesAligner: ALIGN_MEAN
+        timeshiftDuration: 0s
+        yAxis:
+          label: y1Axis
+          scale: LINEAR
+    width: 6
+  - height: 4
+    widget:
+      title: Memory Used Per VM Instance
+      xyChart:
+        chartOptions:
+          mode: COLOR
+        dataSets:
+        - legendTemplate: VM Instance ${metric.labels.instance_name}
+          minAlignmentPeriod: 60s
+          plotType: LINE
+          targetAxis: Y1
+          timeSeriesQuery:
+            timeSeriesFilter:
+              aggregation:
+                alignmentPeriod: 60s
+                crossSeriesReducer: REDUCE_SUM
+                groupByFields:
+                - metric.label."instance_name"
+                perSeriesAligner: ALIGN_MEAN
+              filter: metric.type="compute.googleapis.com/instance/memory/balloon/ram_used"
+                resource.type="gce_instance" resource.label."project_id"="{{ gcp_project }}"
+              secondaryAggregation:
+                alignmentPeriod: 60s
+        timeshiftDuration: 0s
+        yAxis:
+          label: y1Axis
+          scale: LINEAR
+    width: 6
+    xPos: 6
+    yPos: 4
+name: projects/{{ gcp_project }}/dashboards/RESOURCES_MONITORING

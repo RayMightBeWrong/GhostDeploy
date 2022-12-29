@@ -1,3 +1,8 @@
+- name: Create directory (if inexistent) for custom dashboards' temporary files
+  file:
+    path: "{{ dashboards_temp_files_path }}"
+    state: directory
+
 - name: Creates custom dashboards' temporary files using templates
   template:
     src: '{{ dashboards_templates_path }}{{ item }}'

@@ -1,0 +1,104 @@
+displayName: IO Statistics Per VM Instance
+gridLayout:
+  columns: '2'
+  widgets:
+  - title: Connection Count
+    xyChart:
+      chartOptions:
+        mode: COLOR
+      dataSets:
+      - minAlignmentPeriod: 60s
+        plotType: LINE
+        targetAxis: Y1
+        timeSeriesQuery:
+          timeSeriesFilter:
+            aggregation:
+              alignmentPeriod: 60s
+              perSeriesAligner: ALIGN_RATE
+            filter: metric.type="networking.googleapis.com/vm_flow/connection_count"
+              resource.type="gce_instance" resource.label."project_id"="{{ gcp_project }}"
+            secondaryAggregation:
+              alignmentPeriod: 60s
+              crossSeriesReducer: REDUCE_SUM
+              groupByFields:
+              - resource.label."instance_id"
+              perSeriesAligner: ALIGN_MEAN
+      timeshiftDuration: 0s
+      yAxis:
+        label: y1Axis
+        scale: LINEAR
+  - title: External RTT latencies [95th percentile]
+    xyChart:
+      chartOptions:
+        mode: COLOR
+      dataSets:
+      - minAlignmentPeriod: 60s
+        plotType: LINE
+        targetAxis: Y1
+        timeSeriesQuery:
+          timeSeriesFilter:
+            aggregation:
+              alignmentPeriod: 60s
+              crossSeriesReducer: REDUCE_PERCENTILE_95
+              groupByFields:
+              - resource.label."instance_id"
+              perSeriesAligner: ALIGN_DELTA
+            filter: metric.type="networking.googleapis.com/vm_flow/external_rtt" resource.type="gce_instance"
+              resource.label."project_id"="{{ gcp_project }}"
+            secondaryAggregation:
+              alignmentPeriod: 60s
+      timeshiftDuration: 0s
+      yAxis:
+        label: y1Axis
+        scale: LINEAR
+  - title: Sent bytes
+    xyChart:
+      chartOptions:
+        mode: COLOR
+      dataSets:
+      - minAlignmentPeriod: 60s
+        plotType: LINE
+        targetAxis: Y1
+        timeSeriesQuery:
+          timeSeriesFilter:
+            aggregation:
+              alignmentPeriod: 60s
+              perSeriesAligner: ALIGN_RATE
+            filter: metric.type="compute.googleapis.com/instance/network/sent_bytes_count"
+              resource.type="gce_instance" resource.label."project_id"="{{ gcp_project }}"
+            secondaryAggregation:
+              alignmentPeriod: 60s
+              crossSeriesReducer: REDUCE_SUM
+              groupByFields:
+              - resource.label."instance_id"
+              perSeriesAligner: ALIGN_MEAN
+      timeshiftDuration: 0s
+      yAxis:
+        label: y1Axis
+        scale: LINEAR
+  - title: Received bytes
+    xyChart:
+      chartOptions:
+        mode: COLOR
+      dataSets:
+      - minAlignmentPeriod: 60s
+        plotType: LINE
+        targetAxis: Y1
+        timeSeriesQuery:
+          timeSeriesFilter:
+            aggregation:
+              alignmentPeriod: 60s
+              perSeriesAligner: ALIGN_RATE
+            filter: metric.type="compute.googleapis.com/instance/network/received_bytes_count"
+              resource.type="gce_instance" resource.label."project_id"="{{ gcp_project }}"
+            secondaryAggregation:
+              alignmentPeriod: 60s
+              crossSeriesReducer: REDUCE_SUM
+              groupByFields:
+              - resource.label."instance_id"
+              perSeriesAligner: ALIGN_MEAN
+      timeshiftDuration: 0s
+      yAxis:
+        label: y1Axis
+        scale: LINEAR
+name: projects/{{ gcp_project }}/dashboards/VMS_IO_MONITORING
