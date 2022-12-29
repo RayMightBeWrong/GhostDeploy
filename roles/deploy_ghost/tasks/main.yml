@@ -69,7 +69,9 @@
 - name: Ghost kubernetes deployment
   kubernetes.core.k8s:
     state: present
-    src: "{{ ghost_deploy_file }}"
+    template:
+      path: "{{ ghost_deploy_file }}"
+    #src: "{{ ghost_deploy_file }}"
 
 - name: Getting name of Ghost pod
   kubernetes.core.k8s_info:
