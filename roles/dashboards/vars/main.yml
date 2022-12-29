@@ -1,7 +1,7 @@
 # list of all custom dashboards 
 dashboards:
-  - custom_dashboard.json
-  - custom_dashboard2.json
+  - RESOURCES_MONITORING.yaml
+  - VMS_IO_MONITORING.yaml
 
 dashboards_templates_path: "roles/dashboards/templates/"
 dashboards_temp_files_path: "roles/dashboards/temp/"
