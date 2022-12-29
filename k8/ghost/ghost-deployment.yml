@@ -22,17 +22,17 @@ spec:
         image: ghost:5.14.1
         env: # The variables below could be set on a ConfigMap object
         - name: url
-          value: http://146.148.105.129:30007/
+          value: "http://{{ ghost_ip }}:{{ ghost_port }}/"
         - name: database__client
-          value: mysql
+          value: "{{ database_client }}"
         - name: database__connection__host
-          value: mysql-service
+          value: "{{ database_connection_host }}"
         - name: database__connection__user
-          value: ghostuser
+          value: "{{ database_connection_user }}"
         - name: database__connection__password
-          value: bruhlmao
+          value: "{{ database_connection_password }}"
         - name: database__connection__database
-          value: ghost
+          value: "{{ database_name }}"
         - name: mail__transport
           value: "SMTP"
         - name: mail__options__service

@@ -15,7 +15,7 @@ all:
 
 
   # APP variables
-  ghost_ip: 34.132.253.214
+  ghost_ip: 34.133.25.210
   ghost_port: 30007         
 
 
@@ -27,7 +27,22 @@ all:
   ghost_service_file: k8/ghost/ghost-service.yml
 
 
-  # Additional variables
+  ### Additional Variables ###
+
+  # Database variables
+  database_client: mysql
+  database_connection_host: mysql-service
+  database_connection_user: ghostuser
+  database_connection_password: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          32373362313536366665386537333239376366396131386661366661643133616535303932333261
+          3333623237363965353463616330323138666165363737650a646334356537343063333865353137
+          65353265303531653166333931336530323232666562333062653135303763373831376266323666
+          3632343739366566370a323263613339343531636334366638336537323839653139316439366462
+          3436
+  database_name: ghost
+
+  # Mail variables      
   mail_auth_user: !vault |
           $ANSIBLE_VAULT;1.1;AES256
           35633033333563313963383337356464326433616436613830626164303834393631613434353838
