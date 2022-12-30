@@ -3,9 +3,9 @@ all:
  vars:
 
   # GKE cluster variables
-  gcp_project:  ascn-372716              # ID of GCP Project
+  gcp_project: child-playground              # ID of GCP Project
   gcp_auth_kind: serviceaccount            # Do not change
-  gcp_cred_file: gke_key.json  # Path to service account keys (json file downloaded from GCP)
+  gcp_cred_file: child-key.json  # Path to service account keys (json file downloaded from GCP)
 
   gcp_zone: us-central1-a
   gcp_image_type: ubuntu_containerd
@@ -15,11 +15,12 @@ all:
 
 
   # APP variables
-  ghost_ip: 35.224.145.58
+  ghost_ip: 34.67.231.235
   ghost_port: 30007         
 
 
   # k8s files
+  mysql_pv_file: k8/mysql/mysql-pv.yml
   mysql_pvc_file: k8/mysql/mysql-pvc.yml
   mysql_deploy_file: k8/mysql/mysql-deployment.yml
   mysql_service_file: k8/mysql/mysql-service.yml

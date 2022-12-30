@@ -1,39 +1,40 @@
 ---
-
 - name: Ghost kubernetes service
   kubernetes.core.k8s:
     state: absent 
     src: "{{ ghost_service_file }}"
+    wait: true
 
 - name: Ghost kubernetes deployment
   kubernetes.core.k8s:
     state: absent
     template:
       path: "{{ ghost_deploy_file }}"
+    wait: true
 
 - name: MySQL kubernetes deployment
   kubernetes.core.k8s:
     state: absent
     template:
       path: "{{ mysql_deploy_file }}"
+    wait: true  
 
 - name: MySQL kubernetes service
   kubernetes.core.k8s:
     state: absent
     src: "{{ mysql_service_file }}"
+    wait: true
 
 - name: MySQL persistent volume claim
   when: "delete_data is defined and delete_data == 'true'"
   kubernetes.core.k8s:
     state: absent
     src: "{{ mysql_pvc_file }}"
-    
-- name: Wait for services to be undeployed
-  kubernetes.core.k8s_info:
-    api_version: v1
-    kind: Service
-    namespace: default
-  register: services
-  until: services.resources | length == 1  # only kubernetes service running
-  delay: 10
-  retries: 5
+    wait: true
+
+- name: MySQL persistent volume
+  when: "delete_data is defined and delete_data == 'true'"
+  kubernetes.core.k8s:
+    state: absent
+    src: "{{ mysql_pv_file }}"
+    wait: true

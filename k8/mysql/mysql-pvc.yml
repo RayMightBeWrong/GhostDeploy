@@ -8,7 +8,7 @@ metadata:
 spec:
   accessModes:
     - ReadWriteOnce
-  storageClassName: standard-rwo
+  storageClassName: manual
   resources:
     requests:
-      storage: 20Gi 
+      storage: 20Gi

@@ -2,6 +2,11 @@
 
 # MySQL deployment
 
+- name: MySQL persistent volume
+  kubernetes.core.k8s:
+    state: present
+    src: "{{ mysql_pv_file }}"
+
 - name: MySQL persistent volume claim
   kubernetes.core.k8s:
     state: present
@@ -12,6 +17,8 @@
     state: present
     template: 
       path: "{{ mysql_deploy_file }}"
+    wait: true
+    wait_timeout: 200
 
 - name: MySQL kubernetes service
   kubernetes.core.k8s:
@@ -25,18 +32,6 @@
     label_selectors: 
       - app = mysql
   register: mysql_deployment
-
-- name: Wait for MySQL pod to be ready
-  kubernetes.core.k8s_info:
-    api_version: v1
-    kind: Pod
-    name: "{{ mysql_deployment.resources.0.metadata.name }}"
-    namespace: default
-    wait: true
-    wait_condition: 
-      type: Ready
-    wait_timeout: 200
-
 
 # Ghost deployment
 
@@ -64,29 +59,14 @@
     state: present
     backrefs: yes
 
+- meta: refresh_inventory
+
 - name: Ghost kubernetes deployment
   kubernetes.core.k8s:
     state: present
     template:
       path: "{{ ghost_deploy_file }}"
-
-- name: Getting name of Ghost pod
-  kubernetes.core.k8s_info:
-    kind: Pod 
-    namespace: default
-    label_selectors: 
-      - app = ghost
-  register: ghost_deployment
-
-- name: Wait for Ghost pod to be ready
-  kubernetes.core.k8s_info:
-    api_version: v1
-    kind: Pod
-    name: "{{ ghost_deployment.resources.0.metadata.name }}"
-    namespace: default
     wait: true
-    wait_condition: 
-      type: Ready
     wait_timeout: 200
 
 - name: Encrypt admin password
