@@ -1,31 +1,33 @@
 ---
 
-- name: MySQL persistent volume claim
-  when: "delete_data is defined and delete_data == 'true'"
-  kubernetes.core.k8s:
-    state: absent
-    src: k8/mysql/mysql-pvc.yml
-
-- name: MySQL kubernetes deployment
-  kubernetes.core.k8s:
-    state: absent
-    src: k8/mysql/mysql-deployment.yml
-
-- name: MySQL kubernetes service
-  kubernetes.core.k8s:
-    state: absent
-    src: k8/mysql/mysql-service.yml
-
 - name: Ghost kubernetes service
-  k8s:
+  kubernetes.core.k8s:
     state: absent 
-    src: k8/ghost/ghost-service.yml
+    src: "{{ ghost_service_file }}"
 
 - name: Ghost kubernetes deployment
   kubernetes.core.k8s:
     state: absent
-    src: k8/ghost/ghost-deployment.yml
+    template:
+      path: "{{ ghost_deploy_file }}"
 
+- name: MySQL kubernetes deployment
+  kubernetes.core.k8s:
+    state: absent
+    template:
+      path: "{{ mysql_deploy_file }}"
+
+- name: MySQL kubernetes service
+  kubernetes.core.k8s:
+    state: absent
+    src: "{{ mysql_service_file }}"
+
+- name: MySQL persistent volume claim
+  when: "delete_data is defined and delete_data == 'true'"
+  kubernetes.core.k8s:
+    state: absent
+    src: "{{ mysql_pvc_file }}"
+    
 - name: Wait for services to be undeployed
   kubernetes.core.k8s_info:
     api_version: v1

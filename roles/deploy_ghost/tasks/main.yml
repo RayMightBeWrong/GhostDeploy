@@ -56,21 +56,13 @@
   delay: 15
   retries: 5
 
-- name: Test Inline
+- name: Inline Ghost IP Variable
   lineinfile:
     path: inventory/gcp.yml
     regexp: '^(\s*)ghost_ip:'
     line: "\\g<1>ghost_ip: {{ ghost_service.resources.0.status.loadBalancer.ingress.0.ip }}"
     state: present
     backrefs: yes
-
-#- name: Test Inline Ghost Deployment
-#  lineinfile:
-#    path: "{{ ghost_deploy_file }}"
-#    regexp: '^(\s*)value:(\s*)http'
-#    line: '          value: http://{{ ghost_service.resources.0.status.loadBalancer.ingress.0.ip }}:{{ ghost_port }}/'
-#    state: present
-#    backrefs: yes
 
 - name: Ghost kubernetes deployment
   kubernetes.core.k8s:
@@ -108,5 +100,5 @@
     command: mysql ghost -e "UPDATE users SET name='{{ ghost_admin_name }}', password='{{ ghost_admin_pw_encrypted.stdout }}', email='{{ ghost_admin_email }}', status='active' WHERE id=1;"
   register: adminAdded
   until: adminAdded.stderr == ""
-  retries: 5
-  delay: 10
+  retries: 6
+  delay: 20
