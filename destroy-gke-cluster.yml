@@ -5,4 +5,4 @@
   hosts: localhost
   gather_facts: false
   roles:
-  - gke_cluster_destroy
+    - gke_cluster_destroy

@@ -1,64 +1,59 @@
 ---
 all:
- vars:
+        vars:
+                # GKE cluster variables
+                gcp_project: child-playground # ID of GCP Project
+                gcp_auth_kind: serviceaccount # Do not change
+                gcp_cred_file: child-key.json # Path to service account keys (json file downloaded from GCP)
 
-  # GKE cluster variables
-  gcp_project: child-playground              # ID of GCP Project
-  gcp_auth_kind: serviceaccount            # Do not change
-  gcp_cred_file: child-key.json  # Path to service account keys (json file downloaded from GCP)
+                gcp_zone: us-central1-a
+                gcp_image_type: ubuntu_containerd
+                gcp_machine_type: e2-small # Can be changed if necessary
+                gcp_disk_size_gb: 100 # Can be changed if necessary
+                gcp_initial_node_count: 2 # Number of nodes to create. Can be changed if necessary
 
-  gcp_zone: us-central1-a
-  gcp_image_type: ubuntu_containerd
-  gcp_machine_type: e2-small          # Can be changed if necessary
-  gcp_disk_size_gb: 100                # Can be changed if necessary
-  gcp_initial_node_count: 2            # Number of nodes to create. Can be changed if necessary
+                # APP variables
+                ghost_ip: 34.67.231.235
+                ghost_port: 30007
 
+                # k8s files
+                mysql_pv_file: k8/mysql/mysql-pv.yml
+                mysql_pvc_file: k8/mysql/mysql-pvc.yml
+                mysql_deploy_file: k8/mysql/mysql-deployment.yml
+                mysql_service_file: k8/mysql/mysql-service.yml
+                ghost_deploy_file: k8/ghost/ghost-deployment.yml
+                ghost_service_file: k8/ghost/ghost-service.yml
 
-  # APP variables
-  ghost_ip: 34.67.231.235
-  ghost_port: 30007         
+                ### Additional Variables ###
 
-
-  # k8s files
-  mysql_pv_file: k8/mysql/mysql-pv.yml
-  mysql_pvc_file: k8/mysql/mysql-pvc.yml
-  mysql_deploy_file: k8/mysql/mysql-deployment.yml
-  mysql_service_file: k8/mysql/mysql-service.yml
-  ghost_deploy_file: k8/ghost/ghost-deployment.yml
-  ghost_service_file: k8/ghost/ghost-service.yml
-
-
-  ### Additional Variables ###
-
-  # Database variables
-  database_client: mysql
-  database_connection_host: mysql-service
-  database_connection_user: ghostuser
-  database_connection_password: !vault |
-          $ANSIBLE_VAULT;1.1;AES256
-          61636337343834653136303232383961356665306338333662656130316234363439653162323831
-          6561623739653066333563383438336466346139383439310a613665356665326261633665633838
-          34366433393035626638323263613830326536303762633066373861646366646263646434353461
-          3065623764303062320a353538373363313730306139353336316234366231656437666164333239
-          3265
-  database_name: ghost
-
-  # Mail variables      
-  mail_auth_user: !vault |
-          $ANSIBLE_VAULT;1.1;AES256
-          33636461613839323633643339643138373664393939623863663561353335303734343165333335
-          6235663734333861376433643930613233666137336462310a616664656461363134323337343866
-          66353965386136656564366463303563333139623434323462393634393834363234306162336564
-          6331613135653363340a306631343538313564643134343337653138663530653038323632623939
-          34303634356435373864303738343866303130656666303232653035613239346664366334373536
-          35366463643166633433373461613733313736656235653562396563356632313336326233663431
-          346531386130643066393664343937626365
-  mail_auth_pass: !vault |
-          $ANSIBLE_VAULT;1.1;AES256
-          62643530616465333839323232336162373338363032363864346666363263376331323230323130
-          6238323332386266316163393666313763653562386663320a616162636635363963613764663565
-          34323233323932313639376239343438396332336265386563626364363164306436346638626330
-          3963363132653164340a616161633466643663366536653461373939326439363763336563666132
-          39633234393061333837363336363637616562366332373762326335306432343039386162653535
-          65303332343734373537303562323434333963343263336430313966373237623339393064316539
-          343231343236383965626363393661373063
+                # Database variables
+                database_client: mysql
+                database_connection_host: mysql-service
+                database_connection_user: ghostuser
+                database_connection_password: !vault |
+                        $ANSIBLE_VAULT;1.1;AES256
+                        61636337343834653136303232383961356665306338333662656130316234363439653162323831
+                        6561623739653066333563383438336466346139383439310a613665356665326261633665633838
+                        34366433393035626638323263613830326536303762633066373861646366646263646434353461
+                        3065623764303062320a353538373363313730306139353336316234366231656437666164333239
+                        3265
+                database_name: ghost
+                # Mail variables
+                mail_auth_user: !vault |
+                        $ANSIBLE_VAULT;1.1;AES256
+                        33636461613839323633643339643138373664393939623863663561353335303734343165333335
+                        6235663734333861376433643930613233666137336462310a616664656461363134323337343866
+                        66353965386136656564366463303563333139623434323462393634393834363234306162336564
+                        6331613135653363340a306631343538313564643134343337653138663530653038323632623939
+                        34303634356435373864303738343866303130656666303232653035613239346664366334373536
+                        35366463643166633433373461613733313736656235653562396563356632313336326233663431
+                        346531386130643066393664343937626365
+                mail_auth_pass: !vault |
+                        $ANSIBLE_VAULT;1.1;AES256
+                        62643530616465333839323232336162373338363032363864346666363263376331323230323130
+                        6238323332386266316163393666313763653562386663320a616162636635363963613764663565
+                        34323233323932313639376239343438396332336265386563626364363164306436346638626330
+                        3963363132653164340a616161633466643663366536653461373939326439363763336563666132
+                        39633234393061333837363336363637616562366332373762326335306432343039386162653535
+                        65303332343734373537303562323434333963343263336430313966373237623339393064316539
+                        343231343236383965626363393661373063

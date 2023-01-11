@@ -9,10 +9,10 @@ metadata:
   labels:
     app: ghost
 spec:
-  type: LoadBalancer 
+  type: LoadBalancer
   selector:
     app: ghost
   ports:
-  - protocol: TCP
-    port: 30007
-    targetPort: 2368
+    - protocol: TCP
+      port: 30007
+      targetPort: 2368

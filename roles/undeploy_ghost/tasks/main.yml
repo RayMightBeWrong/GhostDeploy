@@ -1,7 +1,7 @@
 ---
 - name: Ghost kubernetes service
   kubernetes.core.k8s:
-    state: absent 
+    state: absent
     src: "{{ ghost_service_file }}"
     wait: true
 
@@ -17,7 +17,7 @@
     state: absent
     template:
       path: "{{ mysql_deploy_file }}"
-    wait: true  
+    wait: true
 
 - name: MySQL kubernetes service
   kubernetes.core.k8s:

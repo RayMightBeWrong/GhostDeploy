@@ -1,5 +1,4 @@
 ---
-
 - name: Refresh inventory
   meta: refresh_inventory
 

@@ -1,4 +1,4 @@
-# list of all custom dashboards 
+# list of all custom dashboards
 dashboards:
   - RESOURCES_MONITORING.yaml
   - VMS_IO_MONITORING.yaml

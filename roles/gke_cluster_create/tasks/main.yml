@@ -1,5 +1,4 @@
 ---
-
 - name: Create Google Kubernetes Engine Cluster
   gcp_container_cluster:
     name: ascn-cluster
@@ -17,7 +16,6 @@
   until: "cluster is not failed"
   delay: 60
   retries: 1
-
 
 - name: Verify that the cluster was created
   shell: gcloud container clusters describe  --project="{{ gcp_project}}"  --zone="{{ gcp_zone }}"  ascn-cluster

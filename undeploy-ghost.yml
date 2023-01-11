@@ -5,5 +5,4 @@
   hosts: localhost
   gather_facts: false
   roles:
-        - undeploy_ghost
-
+    - undeploy_ghost
