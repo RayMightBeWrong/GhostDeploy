@@ -1,11 +1,6 @@
 ---
 # MySQL deployment
 
-- name: MySQL persistent volume # Creates a persistent volume for MySQL
-  kubernetes.core.k8s:
-    state: present # State of the resource
-    src: "{{ mysql_pv_file }}" # Path to the persistent volume file
-
 - name: MySQL persistent volume claim # Creates a persistent volume claim for MySQL
   kubernetes.core.k8s:
     state: present # State of the resource
@@ -69,7 +64,7 @@
     wait_timeout: 200 # Timeout for the deployment
 
 - name: Encrypt admin password # Encrypts the admin password
-  shell: 'python3 -c ''import bcrypt; print(bcrypt.hashpw(b"{{ ghost_admin_pw }}", bcrypt.gensalt(rounds=10)).decode("ascii"))''' # Encrypts the admin password
+  shell: "python3 -c 'import bcrypt; print(bcrypt.hashpw(b\"{{ ghost_admin_pw }}\", bcrypt.gensalt(rounds=10)).decode(\"ascii\"))'" # Encrypts the admin password
   register: ghost_admin_pw_encrypted # Variable to store the result
 
 - name: Create admin in Ghost DB # Creates the admin in the Ghost DB
@@ -80,5 +75,5 @@
   register: adminAdded # Variable to store the result
   ignore_errors: true # Ignores errors
   until: adminAdded.stdout_lines[1] is defined and adminAdded.stdout_lines[1] == "1" # Condition to wait for
-  retries: 6 # Number of attempts
-  delay: 20 # Delay between attempts
+  retries: 10 # Number of attempts
+  delay: 10 # Delay between attempts

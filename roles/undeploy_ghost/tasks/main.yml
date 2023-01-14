@@ -31,10 +31,3 @@
     state: absent # State of the resource
     src: "{{ mysql_pvc_file }}" # Path to the persistent volume claim file
     wait: true # Wait for the resource to be in the desired state
-
-- name: MySQL persistent volume
-  when: "delete_data is defined and delete_data == 'true'" # Condition to check
-  kubernetes.core.k8s:
-    state: absent # State of the resource
-    src: "{{ mysql_pv_file }}" # Path to the persistent volume file
-    wait: true # Wait for the resource to be in the desired state
