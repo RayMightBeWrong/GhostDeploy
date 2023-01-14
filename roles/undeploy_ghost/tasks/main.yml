@@ -1,40 +1,40 @@
 ---
 - name: Ghost kubernetes service
   kubernetes.core.k8s:
-    state: absent
-    src: "{{ ghost_service_file }}"
-    wait: true
+    state: absent # State of the resource
+    src: "{{ ghost_service_file }}" # Path to the service file
+    wait: true # Wait for the resource to be in the desired state
 
 - name: Ghost kubernetes deployment
   kubernetes.core.k8s:
-    state: absent
+    state: absent # State of the resource
     template:
-      path: "{{ ghost_deploy_file }}"
-    wait: true
+      path: "{{ ghost_deploy_file }}" # Path to the deployment file
+    wait: true # Wait for the resource to be in the desired state
 
 - name: MySQL kubernetes deployment
   kubernetes.core.k8s:
-    state: absent
+    state: absent # State of the resource
     template:
-      path: "{{ mysql_deploy_file }}"
-    wait: true
+      path: "{{ mysql_deploy_file }}" # Path to the deployment file
+    wait: true # Wait for the resource to be in the desired state
 
 - name: MySQL kubernetes service
   kubernetes.core.k8s:
-    state: absent
-    src: "{{ mysql_service_file }}"
-    wait: true
+    state: absent # State of the resource
+    src: "{{ mysql_service_file }}" # Path to the service file
+    wait: true # Wait for the resource to be in the desired state
 
 - name: MySQL persistent volume claim
-  when: "delete_data is defined and delete_data == 'true'"
+  when: "delete_data is defined and delete_data == 'true'" # Condition to check
   kubernetes.core.k8s:
-    state: absent
-    src: "{{ mysql_pvc_file }}"
-    wait: true
+    state: absent # State of the resource
+    src: "{{ mysql_pvc_file }}" # Path to the persistent volume claim file
+    wait: true # Wait for the resource to be in the desired state
 
 - name: MySQL persistent volume
-  when: "delete_data is defined and delete_data == 'true'"
+  when: "delete_data is defined and delete_data == 'true'" # Condition to check
   kubernetes.core.k8s:
-    state: absent
-    src: "{{ mysql_pv_file }}"
-    wait: true
+    state: absent # State of the resource
+    src: "{{ mysql_pv_file }}" # Path to the persistent volume file
+    wait: true # Wait for the resource to be in the desired state

@@ -2,7 +2,7 @@
 # Playbook to undeploy Ghost and its component
 
 - name: Undeploy ghost
-  hosts: localhost
-  gather_facts: false
+  hosts: localhost # Host to run the tasks on
+  gather_facts: false # Do not gather facts
   roles:
-    - undeploy_ghost
+    - undeploy_ghost # Role to run

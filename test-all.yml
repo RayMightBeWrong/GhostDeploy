@@ -1,22 +1,22 @@
 ---
 # Playbook to test the full deployment of Ghost (from creation to destruction)
 
-- import_playbook: deploy-ghost.yml
+- import_playbook: deploy-ghost.yml # Import the playbook to deploy Ghost
 
 - name: Tests
-  hosts: localhost
-  gather_facts: true
+  hosts: localhost # Host to run the tasks on
+  gather_facts: true # Gather facts
   roles:
-    - { role: test_ghost }
+    - { role: test_ghost } # Role to run
 
-- import_playbook: undeploy-ghost.yml
+- import_playbook: undeploy-ghost.yml # Import the playbook to undeploy Ghost
 
-- import_playbook: deploy-ghost.yml
+- import_playbook: deploy-ghost.yml # Import the playbook to deploy Ghost
 
 - name: Tests
-  hosts: localhost
-  gather_facts: yes
+  hosts: localhost # Host to run the tasks on
+  gather_facts: yes # Gather facts
   roles:
-    - { role: test_ghost }
+    - { role: test_ghost } # Role to run
 
-- import_playbook: undeploy-ghost.yml delete_data='true'
+- import_playbook: undeploy-ghost.yml delete_data='true' # Import the playbook to undeploy Ghost

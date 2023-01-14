@@ -1,29 +1,29 @@
 ---
 - name: Destroy Google Kubernetes Engine Cluster
   gcp_container_cluster:
-    name: ascn-cluster
-    location: "{{ gcp_zone }}"
-    project: "{{ gcp_project }}"
-    auth_kind: "{{ gcp_auth_kind }}"
-    service_account_file: "{{ gcp_cred_file }}"
-    state: absent
-  register: cluster
-  until: "cluster is not failed"
-  delay: 60
-  retries: 3
+    name: ascn-cluster # Name of the cluster
+    location: "{{ gcp_zone }}" # Zone of the cluster
+    project: "{{ gcp_project }}" # Project of the cluster
+    auth_kind: "{{ gcp_auth_kind }}" # Authentication method
+    service_account_file: "{{ gcp_cred_file }}" # Path to the service account file
+    state: absent # State of the resource
+  register: cluster # Variable to store the result
+  until: "cluster is not failed" # Condition to wait for
+  delay: 60 # Delay between attempts
+  retries: 3 # Number of attempts
 
 - name: Verify that the cluster was deleted
   gcp_container_cluster_info:
-    location: "{{ gcp_zone }}"
-    project: "{{ gcp_project }}"
-    auth_kind: "{{ gcp_auth_kind }}"
-    service_account_file: "{{ gcp_cred_file }}"
+    location: "{{ gcp_zone }}" # Zone of the cluster
+    project: "{{ gcp_project }}" # Project of the cluster
+    auth_kind: "{{ gcp_auth_kind }}" # Authentication method
+    service_account_file: "{{ gcp_cred_file }}" # Path to the service account file
     scopes:
-      - https://www.googleapis.com/auth/cloud-platform
-  register: results
+      - https://www.googleapis.com/auth/cloud-platform # Scopes to use
+  register: results # Variable to store the result
 
 - name: Verify that the command succeeded
   assert:
     that:
       - '''ascn-cluster'' not in "{{ results[''resources''] | map(attribute=''name'')
-        | list }}"'
+        | list }}"' # Condition to check

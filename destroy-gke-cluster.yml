@@ -2,7 +2,7 @@
 # Playbook to destroy GKE cluster
 
 - name: Destroy GKE cluster
-  hosts: localhost
-  gather_facts: false
+  hosts: localhost # Host to run the tasks on
+  gather_facts: false # Do not gather facts
   roles:
-    - gke_cluster_destroy
+    - gke_cluster_destroy # Role to run

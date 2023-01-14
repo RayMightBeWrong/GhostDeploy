@@ -2,7 +2,7 @@
 # Playbook to deploy Ghost and its components
 
 - name: Deploy ghost
-  hosts: localhost
-  gather_facts: false
+  hosts: localhost # Host to run the tasks on
+  gather_facts: false # Do not gather facts
   roles:
-    - deploy_ghost
+    - deploy_ghost # Role to run

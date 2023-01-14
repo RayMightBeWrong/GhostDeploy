@@ -1,24 +1,24 @@
-- name: Create directory (if inexistent) for custom dashboards' temporary files
+- name: Create directory (if inexistent) for custom dashboards' temporary files # Creates a directory to store temporary files for custom dashboards
   file:
-    path: "{{ dashboards_temp_files_path }}"
+    path: "{{ dashboards_temp_files_path }}" # Path to the directory
     state: directory
 
-- name: Creates custom dashboards' temporary files using templates
+- name: Creates custom dashboards' temporary files using templates # Creates temporary files for custom dashboards using templates
   template:
-    src: "{{ dashboards_templates_path }}{{ item }}"
-    dest: "{{ dashboards_temp_files_path }}{{ item }}"
+    src: "{{ dashboards_templates_path }}{{ item }}" # Path to the template
+    dest: "{{ dashboards_temp_files_path }}{{ item }}" # Path to the temporary file
   ignore_errors: true
-  loop: "{{ dashboards }}"
+  loop: "{{ dashboards }}" # List of custom dashboards
 
 # Attempts to create the dashboards specified in the variable 'dashboards'. An error may occur if a dashboard file mentions a specific resource name, and a dashboard with the exact resource name exists
 - name: Create custom dashboards on GCP
-  shell: "gcloud monitoring dashboards create --config-from-file='{{ dashboards_temp_files_path }}{{ item }}'"
+  shell: "gcloud monitoring dashboards create --config-from-file='{{ dashboards_temp_files_path }}{{ item }}'" # Creates the dashboard
   ignore_errors: true
-  loop: "{{ dashboards }}"
+  loop: "{{ dashboards }}" # List of custom dashboards
 
-- name: Deletes custom dashboards' temporary files
+- name: Deletes custom dashboards' temporary files # Deletes temporary files for custom dashboards
   file:
     state: absent
-    path: "{{ dashboards_temp_files_path }}{{ item }}"
+    path: "{{ dashboards_temp_files_path }}{{ item }}" # Path to the temporary file
   ignore_errors: true
-  loop: "{{ dashboards }}"
+  loop: "{{ dashboards }}" # List of custom dashboards

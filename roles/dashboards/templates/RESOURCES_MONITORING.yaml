@@ -1,10 +1,10 @@
-displayName: Services and VM Instances Dashboard
+displayName: Services and VM Instances Dashboard 
 mosaicLayout:
-  columns: 12
+  columns: 12 
   tiles:
   - height: 4
     widget:
-      title: Non-Evictable Memory Per Service
+      title: Non-Evictable Memory Per Service 
       xyChart:
         chartOptions:
           mode: COLOR
@@ -19,7 +19,7 @@ mosaicLayout:
                 alignmentPeriod: 60s
                 crossSeriesReducer: REDUCE_SUM
                 groupByFields:
-                - metadata.system_labels."service_name"
+                - metadata.system_labels."service_name" 
                 perSeriesAligner: ALIGN_MEAN
               filter: metric.type="kubernetes.io/container/memory/used_bytes" resource.type="k8s_container"
                 resource.label."cluster_name"="ascn-cluster" metric.label."memory_type"="non-evictable"

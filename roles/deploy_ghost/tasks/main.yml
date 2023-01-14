@@ -1,84 +1,84 @@
 ---
 # MySQL deployment
 
-- name: MySQL persistent volume
+- name: MySQL persistent volume # Creates a persistent volume for MySQL
   kubernetes.core.k8s:
-    state: present
-    src: "{{ mysql_pv_file }}"
+    state: present # State of the resource
+    src: "{{ mysql_pv_file }}" # Path to the persistent volume file
 
-- name: MySQL persistent volume claim
+- name: MySQL persistent volume claim # Creates a persistent volume claim for MySQL
   kubernetes.core.k8s:
-    state: present
-    src: "{{ mysql_pvc_file }}"
+    state: present # State of the resource
+    src: "{{ mysql_pvc_file }}" # Path to the persistent volume claim file
 
-- name: MySQL kubernetes deployment
+- name: MySQL kubernetes deployment # Creates a deployment for MySQL
   kubernetes.core.k8s:
-    state: present
+    state: present # State of the resource
     template:
-      path: "{{ mysql_deploy_file }}"
-    wait: true
-    wait_timeout: 200
+      path: "{{ mysql_deploy_file }}" # Path to the deployment file
+    wait: true # Waits for the deployment to be ready
+    wait_timeout: 200 # Timeout for the deployment
 
-- name: MySQL kubernetes service
+- name: MySQL kubernetes service # Creates a service for MySQL
   kubernetes.core.k8s:
-    state: present
-    src: "{{ mysql_service_file }}"
+    state: present # State of the resource
+    src: "{{ mysql_service_file }}" # Path to the service file
 
-- name: Getting name of MySQL pod
+- name: Getting name of MySQL pod # Gets the name of the MySQL pod
   kubernetes.core.k8s_info:
-    kind: Pod
-    namespace: default
+    kind: Pod # Kind of the resource
+    namespace: default # Namespace of the resource
     label_selectors:
-      - app = mysql
-  register: mysql_deployment
+      - app = mysql # Label selector
+  register: mysql_deployment # Variable to store the result
 
 # Ghost deployment
 
-- name: Ghost kubernetes service
+- name: Ghost kubernetes service # Creates a service for Ghost
   kubernetes.core.k8s:
-    state: present
-    src: "{{ ghost_service_file }}"
+    state: present # State of the resource
+    src: "{{ ghost_service_file }}" # Path to the service file
 
-- name: Wait for Ghost service to be ready
+- name: Wait for Ghost service to be ready # Waits for the service to be ready
   kubernetes.core.k8s_info:
-    api_version: v1
-    kind: Service
-    name: ghost-service
-    namespace: default
-  register: ghost_service
-  until: "ghost_service.resources.0.status.loadBalancer.ingress.0.ip is defined"
-  delay: 15
-  retries: 5
+    api_version: v1 # API version of the resource
+    kind: Service # Kind of the resource
+    name: ghost-service # Name of the resource
+    namespace: default # Namespace of the resource
+  register: ghost_service # Variable to store the result
+  until: "ghost_service.resources.0.status.loadBalancer.ingress.0.ip is defined" # Condition to wait for
+  delay: 15 # Delay between attempts
+  retries: 5 # Number of attempts
 
-- name: Inline Ghost IP Variable
+- name: Inline Ghost IP Variable # Sets the Ghost IP variable
   lineinfile:
-    path: inventory/gcp.yml
-    regexp: '^(\s*)ghost_ip:'
-    line: "\\g<1>ghost_ip: {{ ghost_service.resources.0.status.loadBalancer.ingress.0.ip }}"
-    state: present
-    backrefs: yes
+    path: inventory/gcp.yml # Path to the inventory file
+    regexp: '^(\s*)ghost_ip:' # Regular expression to match
+    line: "\\g<1>ghost_ip: {{ ghost_service.resources.0.status.loadBalancer.ingress.0.ip }}" # Line to insert
+    state: present # State of the resource
+    backrefs: yes # Whether to use backreferences
 
-- meta: refresh_inventory
+- meta: refresh_inventory # Refreshes the inventory
 
-- name: Ghost kubernetes deployment
+- name: Ghost kubernetes deployment # Creates a deployment for Ghost
   kubernetes.core.k8s:
-    state: present
+    state: present # State of the resource
     template:
-      path: "{{ ghost_deploy_file }}"
-    wait: true
-    wait_timeout: 200
+      path: "{{ ghost_deploy_file }}" # Path to the deployment file
+    wait: true # Waits for the deployment to be ready
+    wait_timeout: 200 # Timeout for the deployment
 
-- name: Encrypt admin password
-  shell: 'python3 -c ''import bcrypt; print(bcrypt.hashpw(b"{{ ghost_admin_pw }}", bcrypt.gensalt(rounds=10)).decode("ascii"))'''
-  register: ghost_admin_pw_encrypted
+- name: Encrypt admin password # Encrypts the admin password
+  shell: 'python3 -c ''import bcrypt; print(bcrypt.hashpw(b"{{ ghost_admin_pw }}", bcrypt.gensalt(rounds=10)).decode("ascii"))''' # Encrypts the admin password
+  register: ghost_admin_pw_encrypted # Variable to store the result
 
-- name: Create admin in Ghost DB
+- name: Create admin in Ghost DB # Creates the admin in the Ghost DB
   kubernetes.core.k8s_exec:
-    namespace: default
-    pod: "{{ mysql_deployment.resources.0.metadata.name }}"
-    command: mysql ghost -e "UPDATE users SET name='{{ ghost_admin_name }}', password='{{ ghost_admin_pw_encrypted.stdout }}', email='{{ ghost_admin_email }}', status='active' WHERE id=1; SELECT IF(EXISTS (SELECT * FROM users WHERE name='{{ ghost_admin_name }}'), 1, 0) AS user_exists;"
-  register: adminAdded
-  ignore_errors: true
-  until: adminAdded.stdout_lines[1] is defined and adminAdded.stdout_lines[1] == "1"
-  retries: 6
-  delay: 20
+    namespace: default # Namespace of the resource
+    pod: "{{ mysql_deployment.resources.0.metadata.name }}" # Name of the pod
+    command: mysql ghost -e "UPDATE users SET name='{{ ghost_admin_name }}', password='{{ ghost_admin_pw_encrypted.stdout }}', email='{{ ghost_admin_email }}', status='active' WHERE id=1; SELECT IF(EXISTS (SELECT * FROM users WHERE name='{{ ghost_admin_name }}'), 1, 0) AS user_exists;" # Command to execute
+  register: adminAdded # Variable to store the result
+  ignore_errors: true # Ignores errors
+  until: adminAdded.stdout_lines[1] is defined and adminAdded.stdout_lines[1] == "1" # Condition to wait for
+  retries: 6 # Number of attempts
+  delay: 20 # Delay between attempts

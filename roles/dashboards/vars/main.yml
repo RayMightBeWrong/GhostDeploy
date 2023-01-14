@@ -1,7 +1,7 @@
 # list of all custom dashboards
 dashboards:
-  - RESOURCES_MONITORING.yaml
-  - VMS_IO_MONITORING.yaml
+  - RESOURCES_MONITORING.yaml # Dashboard for monitoring resources
+  - VMS_IO_MONITORING.yaml # Dashboard for monitoring VMs' I/O
 
-dashboards_templates_path: "roles/dashboards/templates/"
-dashboards_temp_files_path: "roles/dashboards/temp/"
+dashboards_templates_path: "roles/dashboards/templates/" # Path to the directory where templates for custom dashboards are stored
+dashboards_temp_files_path: "roles/dashboards/temp/" # Path to the directory where temporary files for custom dashboards will be stored
