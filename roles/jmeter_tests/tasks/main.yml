@@ -8,6 +8,6 @@
 
 - name: Run automatic tests
   shell:
-    cmd: ./{{jmeter_bin}} -n -t {{tests_path}}{{ item }} -l {{tests_path}}{{ item }}.log > {{tests_path}}{{ item }}_execution.log
+    cmd: "{{jmeter_bin}} -n -t {{tests_path}}{{ item }} -l {{tests_path}}{{ item }}.log > {{tests_path}}{{ item }}_execution.log"
   ignore_errors: true
   loop: "{{ tests }}"
