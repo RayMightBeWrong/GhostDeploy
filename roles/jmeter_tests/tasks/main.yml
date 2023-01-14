@@ -1,0 +1,13 @@
+---
+- name: Create tests from template
+  template:
+    src: "{{ test_template_path }}{{ item }}"
+    dest: "{{ tests_path }}{{ item }}"
+  ignore_errors: true
+  loop: "{{ tests }}"
+
+- name: Run automatic tests
+  shell:
+    cmd: ./{{jmeter_bin}} -n -t {{tests_path}}{{ item }} -l {{tests_path}}{{ item }}.log > {{tests_path}}{{ item }}_execution.log
+  ignore_errors: true
+  loop: "{{ tests }}"

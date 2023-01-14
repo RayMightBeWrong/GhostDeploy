@@ -1,0 +1,8 @@
+# list of all tests
+tests:
+  - TestPlan.jmx
+
+test_template_path: "roles/jmeter_tests/templates/"
+tests_path: "jmeter_tests/"
+
+jmeter_bin: "jmeter_tests/apache-jmeter-5.5/bin/jmeter"
